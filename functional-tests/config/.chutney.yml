@@ -1,0 +1,108 @@
+AvoidOutlineForSingleExample:
+  Enabled: true
+
+AvoidPeriod:
+  Enabled: true
+
+AvoidScripting:
+  Enabled: true
+
+AvoidSplatStepsInBackground:
+  Enabled: true
+
+AvoidSplatStepsInScenarios:
+  Enabled: true
+
+AvoidTypographersQuotes:
+  Enabled: true
+
+BackgroundDoesMoreThanSetup:
+  Enabled: true
+
+BackgroundRequiresMultipleScenarios:
+  Enabled: true
+
+BadScenarioName:
+  Enabled: true
+
+BeDeclarative:
+  Enabled: false
+
+FileNameDiffersFeatureName:
+  Enabled: true
+
+GivensAfterBackground:
+  Enabled: true
+
+MissingExampleName:
+  Enabled: true
+
+MissingFeatureDescription:
+  Enabled: true
+
+MissingFeatureName:
+  Enabled: true
+
+MissingScenarioName:
+  Enabled: true
+
+MissingTestAction:
+  Enabled: true
+
+MissingVerification:
+  Enabled: true
+
+InvalidFileName:
+  Enabled: true
+
+InvalidStepFlow:
+  Enabled: true
+
+RequiredTagsStartsWith:
+  Enabled: false
+
+# Chutney 3.1.0
+SameTagDifferentCase:
+  Enabled: true
+
+SameTagForAllScenarios:
+  Enabled: true
+
+# Chutney 1.6.2
+ScenarioNamesMatch:
+  Enabled: true
+  Matcher: ^AC.*
+
+TagUsedMultipleTimes:
+  Enabled: true
+
+TooClumsy:
+  Enabled: true
+
+TooManyDifferentTags:
+  Enabled: false
+
+TooManySteps:
+  Enabled: true
+
+TooManyTags:
+  Enabled: false
+
+TooLongStep:
+  Enabled: true
+  MaxLength: 120
+
+UniqueScenarioNames:
+  Enabled: true
+
+UnknownVariable:
+  Enabled: true
+
+UnusedVariable:
+  Enabled: true
+
+UseBackground:
+  Enabled: true
+
+UseOutline:
+  Enabled: true

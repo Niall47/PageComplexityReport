@@ -1,0 +1,61 @@
+# Tool to define tasks to be run in the command line
+
+require 'config'
+require 'dvla/herodotus'
+require 'open3'
+require 'parallel_tests'
+require 'simple_symbolize'
+
+# Load configuration for Config gem
+Config.load_and_set_settings(Config.setting_files('./config', ENV.fetch('ENVIRONMENT', 'local')))
+
+# Initialise Logger output
+LOG = DVLA::Herodotus.logger
+# Set the Logger Level to output in terminal
+LOG.level = Logger.const_get(Settings.test.log_level)
+
+# Initialise ParallelTests and set formatter based on whether results are to be sent to ReportPortal
+parallel = ParallelTests::CLI.new
+cucumber_formatter = symbolize(Settings.report_portal.status).eql?(:up) ? 'ParallelReportPortal::Cucumber::Formatter' : 'pretty'
+
+namespace :lint do
+  # Usage: bundle exec rake "lint:unused_step_defs"
+  # -B num: Grabs the 'num' lines before match
+  # -v: remove matches
+  task :unused_step_defs do
+    LOG.info('Starting scan for unused step definitions...'.cyan)
+
+    cmd = "bundle exec cucumber --dry-run --format stepdefs | grep -B1 'NOT MATCHED BY ANY STEPS' | grep -v 'NOT MATCHED BY ANY STEPS' | grep -v 'be axe clean'"
+    stdout, _stderr, _status = Open3.capture3(cmd)
+    raise StandardError, "Fix the following unused step definitions: \n#{stdout.red}\n" unless stdout.empty?
+
+    LOG.info('No unused step definitions found'.green)
+  end
+
+  # Usage: bundle exec rake "lint:undefined_step_defs"
+  # -A num: Grabs the 'num' lines after match
+  task :undefined_step_defs do
+    LOG.info('Starting scan for undefined step definitions...'.cyan)
+
+    cmd = "bundle exec cucumber --dry-run --format stepdefs | grep -A100 'You can implement step definitions for undefined steps with these snippets:'"
+    stdout, _stderr, _status = Open3.capture3(cmd)
+    raise StandardError, "Fix the following undefined step definitions: \n#{stdout.red}\n" unless stdout.empty?
+
+    LOG.info('No undefined step definitions found'.green)
+  end
+end
+
+namespace :functional_tests do
+  # Usage: bundle exec rake "functional_tests:run[2, features, @positive]"
+  task :run, %i[threads feature_path tag] do |_t, args|
+    args.with_defaults(threads: '1', feature_path: 'features', tag: nil)
+
+    tags = args.tag.nil? ? 'not @exclude' : "#{args.tag} and not @exclude"
+
+    LOG.info("Threads: '#{args.threads}' | Feature path: '#{args.feature_path}' | Tags: '#{tags}' | Formatter: '#{cucumber_formatter}'")
+
+    parallel.run(['-n', args.threads, '--type', 'cucumber', '--group-by', 'scenarios', '--serialize-stdout',
+                  '--', '-f', cucumber_formatter, '--out', '/dev/null', '-f', 'progress',
+                  '-t', tags, '--', args.feature_path])
+  end
+end

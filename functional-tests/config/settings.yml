@@ -1,0 +1,15 @@
+test:
+  accessibility: <%= ENV['ACCESSIBILITY'] || true %>
+  log_level: <%= ENV['LOG_LEVEL'] || 'DEBUG' %>
+
+browser_config:
+  app_host: <%= ENV['APP_HOST'] || 'http://localhost:3000' %>
+  browser: <%= ENV['BROWSER'] || :chrome %> # %i[chrome edge firefox]
+  execution: <%= ENV['EXECUTION'] || :local %> # %i[local drone docker]
+  headless: <%= ENV['HEADLESS'] || false %>
+  mode: <%= ENV['MODE'] || :local_driver %> # %i[local_driver selenium_hub]
+  selenium_healthcheck: <%= ENV['SELENIUM_HEALTHCHECK'] || 'http://selenium-hub:4444/status' %>
+  selenium_url: <%= ENV['SELENIUM_URL'] || 'http://selenium-hub:4444/wd/hub' %>
+
+report_portal:
+  status: <%= ENV['REPORT_PORTAL_STATUS'] || :down %>

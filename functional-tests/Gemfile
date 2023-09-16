@@ -1,0 +1,27 @@
+source 'https://rubygems.org'
+
+# DVLA-specific gems from Nexus:
+source 'https://nexus.tooling.dvla.gov.uk/repository/gem-private' do
+  gem 'dvla-browser-drivers', '~> 0.0.4'
+  gem 'dvla-herodotus', '~> 0.4'
+  gem 'dvla-lint', '~> 1.6'
+  gem 'dvla-testware', '~> 1.6'
+end
+
+# Public gems from RubyGems:
+gem 'axe-core-cucumber', '~> 4.4'
+gem 'bundler-audit', '~> 0.9'
+gem 'chutney', '~> 3.3'
+gem 'config', '~> 4.0'
+gem 'cucumber', '~> 8.0'
+gem 'faker', '~> 2.23'
+gem 'faker_maker', '~> 1.2'
+gem 'hash_miner', '~> 1.1'
+gem 'httparty', '~> 0.21'
+gem 'parallel_report_portal', '~> 2.4'
+gem 'pry', '~> 0.14'
+gem 'rake', '~> 13.0'
+gem 'rspec-expectations', '~> 3.11'
+gem 'selenium-webdriver', '~> 4.4'
+gem 'simple_symbolize', '~> 2.0'
+gem 'webdrivers', '~> 5.1', require: false
