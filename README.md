@@ -41,8 +41,11 @@ If you just want to run against a single flow:
 Create the flow object and pass a configuration block to it
 
     @complexity = PageComplexity::Flow.new do |config|
-        config.name = "Example flow"
+        config.ignore_duplicate_pages = true
         config.ignore_headers = false
+        config.name = "Example flow"
+        config.output_directory = "reports"
+        config.selector = '#content'
     end
 
 Then, pass the page object by calling .add_page(page) for each page you navigate to.

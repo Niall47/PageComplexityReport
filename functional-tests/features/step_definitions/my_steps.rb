@@ -3,8 +3,22 @@ Given(/^a user navigates to (.*)$/) do |url|
 end
 
 Given(/^a user navigates through (.*)$/) do |url|
+
+  # SETUP COMPLEXITY REPORT
+  @complexity = PageComplexity::Flow.new do |config|
+    config.ignore_duplicate_pages = true
+    config.ignore_headers = false
+    config.name = "Example flow"
+    config.output_directory = "reports"
+    config.selector = '#content'
+  end
+
+
   visit 'http://www.gov.uk'
   while page.current_url != url
+    # ADD PAGE TO COMPLEXITY REPORT
+    LOG.info "Adding page #{page.current_url} to complexity report"
+    @complexity.add_page(page)
     current_url = URI.parse(page.current_url).host
     case current_url
     when 'www.gov.uk'
@@ -21,10 +35,8 @@ Given(/^a user navigates through (.*)$/) do |url|
       visit 'https://www.wikipedia.org'
     else
       fail "Unknown search engine #{current_url}"
-
     end
-
-    # TODO add a loop
-    sleep 1
+    # GENERATE PAGE COMPLEXITY REPORT
+    @complexity.generate_report
   end
 end

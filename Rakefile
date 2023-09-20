@@ -13,7 +13,7 @@ task default: %i[spec rubocop]
 
 task :build do
   sh "gem build page_complexity.gemspec"
-  sh "gem install page_complexity-0.1.0.gem"
+  sh "gem install page_complexity-0.1.1.gem"
 end
 
 task :run do
@@ -30,11 +30,7 @@ task :run do
     config.ignore_headers = false
   end
   complexity.add_page(page)
-  binding.pry
   complexity.generate_report
 
 end
 
-task :test1 [:build] do
-  bundle exec cucumber
-end

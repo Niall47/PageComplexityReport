@@ -27,7 +27,8 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   # Uncomment to register a new dependency of your gem
-  spec.add_dependency "textstat", "~> 0.1.9"
+  spec.add_dependency "textstat", "~> 0.1.7"
+  spec.add_dependency "ruby-latex", "~> 0.1"
 
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html

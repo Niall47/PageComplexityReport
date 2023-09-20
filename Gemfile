@@ -11,8 +11,6 @@ gem "rspec", "~> 3.0"
 
 gem "rubocop", "~> 1.21"
 
-gem "textstat", "~> 0.1.9"
-
 gem "erb", "~> 4.0"
 
 # just for dev
