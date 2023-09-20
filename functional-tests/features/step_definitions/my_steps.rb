@@ -8,7 +8,7 @@ Given(/^a user navigates through (.*)$/) do |url|
   @complexity = PageComplexity::Flow.new do |config|
     config.ignore_duplicate_pages = true
     config.ignore_headers = false
-    config.name = "Example flow"
+    config.name = "Step walker demo"
     config.output_directory = "reports"
     config.selector = '#content'
   end
@@ -36,7 +36,7 @@ Given(/^a user navigates through (.*)$/) do |url|
     else
       fail "Unknown search engine #{current_url}"
     end
-    # GENERATE PAGE COMPLEXITY REPORT
-    @complexity.generate_report
   end
+  # GENERATE PAGE COMPLEXITY REPORT
+  @complexity.generate_report
 end

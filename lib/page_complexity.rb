@@ -52,12 +52,7 @@ module PageComplexity
         LOG.info "Ignoring duplicate page #{page.current_url}"
       else
         text = get_text(page)
-
-        if text.empty?
-          LOG.warn "Found no text on #{page.current_url}"
-        end
-
-        analysis = PageComplexity.analyze(text: text)
+        analysis = text.empty? ? { error: 'No text found' } : PageComplexity.analyze(text: text)
         new_page = Page.new(analysis: analysis, text: text, url: page.current_url)
         @pages[page.current_url] = new_page
       end
@@ -72,7 +67,7 @@ module PageComplexity
 
       # @output_directory
       # Assuming you want to save the report to a file
-      report_file_path = "#{@flow}_readability_report_#{DateTime.now.strftime('%d-%m-%Y_%H-%M-%S')}.html"
+      report_file_path = "#{@config.name}_readability_report_#{DateTime.now.strftime('%d-%m-%Y_%H-%M-%S')}.html"
       File.open(report_file_path, 'w') do |file|
         file.puts report_content
       end
