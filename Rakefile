@@ -34,3 +34,7 @@ task :run do
   complexity.generate_report
 
 end
+
+task :test1 [:build] do
+  bundle exec cucumber
+end

@@ -23,19 +23,20 @@ module PageComplexity
     end
 
     class Configuration
-      attr_accessor :name, :output_directory, :ignore_headers
+      attr_accessor :name, :output_directory, :ignore_headers, :ignore_duplicate_pages, :selector
 
       def initialize
         @name = 'Unnamed Flow'
         @output_directory = '/'
         @ignore_headers = false
+        @ignore_duplicate_pages = true
+        @selector = '#content'
       end
     end
 
     def get_text(page)
       text = if @config.ignore_headers
-               # TODO should we be hardcoding the selector here?
-               find_all('#content').map(&:text).join(' ')
+               find_all(@config.selector).map(&:text).join(' ')
             else
               page.text
              end
@@ -47,8 +48,8 @@ module PageComplexity
     def add_page(page)
       raise "Page must be a capybara page" unless page.is_a?(Capybara::Session)
 
-      if pages.keys.include?(page.current_url)
-        puts "We have a duplicate page"
+      if pages.keys.include?(page.current_url) && @config.ignore_duplicate_pages
+        LOG.info "Ignoring duplicate page #{page.current_url}"
       else
         text = get_text(page)
         analysis = PageComplexity.analyze(text: text)
