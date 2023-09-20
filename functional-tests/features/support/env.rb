@@ -1,6 +1,7 @@
 Bundler.require
 require 'axe-cucumber-steps'
 require 'capybara/dsl'
+require 'uri'
 
 include RSpec::Matchers
 

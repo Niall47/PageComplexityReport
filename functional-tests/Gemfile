@@ -25,3 +25,5 @@ gem 'rspec-expectations', '~> 3.11'
 gem 'selenium-webdriver', '~> 4.4'
 gem 'simple_symbolize', '~> 2.0'
 gem 'webdrivers', '~> 5.1', require: false
+
+gem "uri", "~> 0.12.2"

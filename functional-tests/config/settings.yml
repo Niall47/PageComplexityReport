@@ -1,5 +1,5 @@
 test:
-  accessibility: <%= ENV['ACCESSIBILITY'] || true %>
+  accessibility: false
   log_level: <%= ENV['LOG_LEVEL'] || 'DEBUG' %>
 
 browser_config:

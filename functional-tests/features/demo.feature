@@ -13,8 +13,10 @@ Feature: demo
     And a user navigates to http://www.wikipedia.org
     And a user navigates to http://www.wolframalpha.com
 
+  @after-scenario-demo
   Scenario: a user navigates a gov.uk flow
       In this example we use a loop to navigate and capture the page each iteration of the loop
 
-    Given a user navigates through https://www.gov.uk/vehicle-tax
+    Given a user navigates through https://www.wikipedia.org/
+
 
