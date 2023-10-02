@@ -17,26 +17,26 @@ Given(/^a user navigates through (.*)$/) do |url|
   visit 'http://www.gov.uk'
   while page.current_url != url
     # ADD PAGE TO COMPLEXITY REPORT
-    LOG.info "Adding page #{page.current_url} to complexity report"
     @complexity.add_page(page)
     current_url = URI.parse(page.current_url).host
     case current_url
     when 'www.gov.uk'
       visit 'https://www.google.com'
     when 'www.google.com'
-      visit 'https://www.bing.com'
-    when 'www.bing.com'
       visit 'https://www.yahoo.com'
     when 'consent.yahoo.com'
       visit 'https://duckduckgo.com'
     when 'duckduckgo.com'
-      visit 'https://www.wolframalpha.com'
-    when 'www.wolframalpha.com'
-      visit 'https://www.wikipedia.org'
+      visit 'https://en.wikipedia.org/wiki/English_language'
+    when 'en.wikipedia.org'
+      visit 'https://simple.wikipedia.org/wiki/String_theory'
+    when 'simple.wikipedia.org'
+      visit 'https://en.wikipedia.org/wiki/String_theory'
     else
       fail "Unknown search engine #{current_url}"
     end
   end
   # GENERATE PAGE COMPLEXITY REPORT
-  @complexity.generate_report
+  @complexity.add_page(page)
+  @complexity.generate_report!
 end

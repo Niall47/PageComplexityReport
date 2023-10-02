@@ -21,3 +21,5 @@ gem "pry", "~> 0.14.2"
 gem "rspec-expectations", "~> 3.12"
 
 gem "ruby-latex", "~> 0.1"
+
+gem "selenium-webdriver", "~> 4.12"

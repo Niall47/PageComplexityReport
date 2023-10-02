@@ -5,6 +5,8 @@ W.I.P
 A gem to calculate the complexity of a page. The complexity is calculated by counting the number of elements in the page and the number of elements that have a specific class and id. 
 A html document is created when you call .generate_report which will show an analysis of each page and an overall summary of the flow
 
+This relies heavily on Capybara to parse the page for text and the TextStat gem for providing the readability scores.
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -54,12 +56,10 @@ Then, pass the page object by calling .add_page(page) for each page you navigate
 
 When you have finished navigating, call .generate_report to output the results to the console.
 
-    @complexity.generate_report
+    @complexity.generate_report!
 
 
-## Add to rakefile / hooks
-This is guesswork!
-
+## Add to rakefile / hooks.rb
 If you want to run against a whole suite of tests
 ### Rakefile    
 

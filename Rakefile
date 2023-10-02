@@ -26,11 +26,15 @@ task :run do
   visit("/")
 
   complexity = PageComplexity::Flow.new do |config|
-    config.name = "test"
+    config.ignore_duplicate_pages = true
     config.ignore_headers = false
+    config.name = "Rakefile demo"
+    config.output_directory = "/reports"
+    config.selector = '#content'
   end
+
   complexity.add_page(page)
-  complexity.generate_report
+  complexity.generate_report!
 
 end
 

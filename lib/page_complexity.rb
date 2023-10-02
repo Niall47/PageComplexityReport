@@ -51,6 +51,7 @@ module PageComplexity
       if pages.keys.include?(page.current_url) && @config.ignore_duplicate_pages
         LOG.info "Ignoring duplicate page #{page.current_url}"
       else
+        LOG.info "Adding page #{page.current_url}"
         text = get_text(page)
         analysis = text.empty? ? { error: 'No text found' } : PageComplexity.analyze(text: text)
         new_page = Page.new(analysis: analysis, text: text, url: page.current_url)
@@ -58,7 +59,7 @@ module PageComplexity
       end
     end
 
-    def generate_report
+    def generate_report!
       generate_total_read_time
       _analysis_metrics = @pages.first.last.analysis.keys
       template_path = File.join(File.dirname(__FILE__), 'page_complexity/template.html.erb')
@@ -76,15 +77,15 @@ module PageComplexity
     def generate_total_read_time
       @pages.each_pair do |key, value|
         if value.analysis[:error]
-          puts "Skipping #{key} due to error"
+          LOG.info "Skipping #{key} due to error"
         else
-          value.analysis[:page_read_time] = (value.analysis[:lexicon_count] / 200).round(2)
-          puts "Approximate read time for #{key} is #{value.analysis[:page_read_time]} minute(s)"
+          lexicon = (value.analysis[:lexicon_count].to_f / 200)
+          hours = lexicon.round(2)
+          minutes = (lexicon.modulo(1)) * 60
+          LOG.info "Time to read #{key} is #{hours.round(0)} hours and #{minutes.round(0)} minutes"
         end
-
       end
     end
-
   end
 
   class Page
@@ -139,6 +140,7 @@ end
 # take an arg for the output file location - Done
 # update the template to colour code good and bad results
 # Add an estimated journey time - In progress
+# TODO add_pages just take an array and loop through it
 
 
 # Mentortainment
