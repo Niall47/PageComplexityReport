@@ -8,7 +8,7 @@ Given(/^a user navigates through (.*)$/) do |url|
   @complexity = PageComplexity::Flow.new do |config|
     config.ignore_duplicate_pages = true
     config.ignore_headers = false
-    config.name = "Step walker demo"
+    config.name = "Step_walker_demo"
     config.output_directory = "reports"
     config.selector = '#content'
   end

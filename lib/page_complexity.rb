@@ -41,8 +41,7 @@ module PageComplexity
                page.text
              end
       LOG.warn "Found no text on #{page.current_url}" if text.empty?
-
-      text
+      text.delete("^a-zA-Z0-9_.,!?\"'() \n-")
     end
 
     def add_page(page)
@@ -60,7 +59,6 @@ module PageComplexity
     end
 
     def generate_report!
-      generate_total_read_time
       _analysis_metrics = @pages.first.last.analysis.keys
       template_path = File.join(File.dirname(__FILE__), 'page_complexity/template.html.erb')
       template = ERB.new(File.read(template_path))
@@ -71,19 +69,6 @@ module PageComplexity
       report_file_path = "#{@config.name}_readability_report_#{DateTime.now.strftime('%d-%m-%Y_%H-%M-%S')}.html"
       File.open(report_file_path, 'w') do |file|
         file.puts report_content
-      end
-    end
-
-    def generate_total_read_time
-      @pages.each_pair do |key, value|
-        if value.analysis[:error]
-          LOG.info "Skipping #{key} due to error"
-        else
-          lexicon = (value.analysis[:lexicon_count].to_f / 200)
-          hours = lexicon.round(2)
-          minutes = (lexicon.modulo(1)) * 60
-          LOG.info "Time to read #{key} is #{hours.round(0)} hours and #{minutes.round(0)} minutes"
-        end
       end
     end
   end
@@ -98,11 +83,17 @@ module PageComplexity
     end
   end
 
+  def self.time_to_read(text)
+    minutes = (TextStat.lexicon_count(text).to_f / 200)
+    LOG.info "Time to read is #{minutes.round(0)} minutes"
+    minutes.round(0).to_s
+  end
   def self.analyze(text:)
     analysis = {}
     if text.empty?
       analysis[:error] = 'No text found'
     else
+      analysis[:time_to_read] = time_to_read(text)
       analysis[:char_count] = TextStat.char_count(text)
       analysis[:lexicon_count] = TextStat.lexicon_count(text)
       analysis[:syllable_count] = TextStat.syllable_count(text)
