@@ -5,6 +5,7 @@ require 'dvla/herodotus'
 require 'open3'
 require 'parallel_tests'
 require 'simple_symbolize'
+require 'page_complexity'
 
 # Load configuration for Config gem
 Config.load_and_set_settings(Config.setting_files('./config', ENV.fetch('ENVIRONMENT', 'local')))
@@ -46,16 +47,27 @@ namespace :lint do
 end
 
 namespace :functional_tests do
-  # Usage: bundle exec rake "functional_tests:run[2, features, @positive]"
+  # Usage: bundle exec rake "functional_tests:run[2, features, @after-step-demo]"
   task :run, %i[threads feature_path tag] do |_t, args|
+
+    @complexity = PageComplexity::Flow.new do |config|
+      config.name = "Example flow"
+      config.ignore_headers = false
+    end
+
     args.with_defaults(threads: '1', feature_path: 'features', tag: nil)
-
     tags = args.tag.nil? ? 'not @exclude' : "#{args.tag} and not @exclude"
-
     LOG.info("Threads: '#{args.threads}' | Feature path: '#{args.feature_path}' | Tags: '#{tags}' | Formatter: '#{cucumber_formatter}'")
-
     parallel.run(['-n', args.threads, '--type', 'cucumber', '--group-by', 'scenarios', '--serialize-stdout',
                   '--', '-f', cucumber_formatter, '--out', '/dev/null', '-f', 'progress',
                   '-t', tags, '--', args.feature_path])
+  end
+
+  task :demo do
+    @complexity = PageComplexity::Flow.new do |config|
+      config.name = "Example flow"
+      config.ignore_headers = false
+    end
+    cucumber = Cucumber::Cli::Main.new(['features', '--format', 'pretty', '--format', 'json', '--out', 'report.json'])
   end
 end
