@@ -9,6 +9,7 @@ require "ruby-latex"
 # TODO update TextStat gem with EN-GB and CY-GB dictionaries
 # TODO method comments
 # TODO drone setup
+# TODO Clean up and colour code the output html
 
 module PageComplexity
   class Error < StandardError; end
