@@ -35,7 +35,7 @@ If bundler is not being used to manage dependencies, install the gem by executin
 
 
 
-# Usage
+# Usage:
 ## Add to navigation method
 
 If you just want to run against a single flow:
@@ -60,6 +60,7 @@ When you have finished navigating, call .generate_report to output the results t
 
 
 ## Add to rakefile / hooks.rb
+### WIP - not working
 If you want to run against a whole suite of tests
 ### Rakefile    
 

@@ -5,6 +5,11 @@ require "textstat"
 require "erb"
 require "ruby-latex"
 
+# TODO spec tests
+# TODO update TextStat gem with EN-GB and CY-GB dictionaries
+# TODO method comments
+# TODO drone setup
+
 module PageComplexity
   class Error < StandardError; end
 
@@ -59,6 +64,13 @@ module PageComplexity
       end
     end
 
+    def add_pages(pages)
+      raise "Expected an array of pages" unless (pages.is_a? Array) && (pages.all? { |page| page.is_a?(Capybara::Session) })
+      # TODO do we need to dup or freeze them first?
+
+      pages.each { | page | add_page(page) }
+    end
+
     def generate_report!
       _analysis_metrics = @pages.first.last.analysis.keys
       template_path = File.join(File.dirname(__FILE__), 'page_complexity/template.html.erb')
@@ -94,6 +106,7 @@ module PageComplexity
     if text.empty?
       analysis[:error] = 'No text found'
     else
+      # TODO do we care about many of these?
       analysis[:time_to_read] = time_to_read(text)
       analysis[:char_count] = TextStat.char_count(text)
       analysis[:lexicon_count] = TextStat.lexicon_count(text)

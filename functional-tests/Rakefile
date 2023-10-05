@@ -49,6 +49,8 @@ end
 namespace :functional_tests do
   # Usage: bundle exec rake "functional_tests:run[2, features, @after-step-demo]"
   task :run, %i[threads feature_path tag] do |_t, args|
+    #TODO make this work? Need @complexity instance to be available inside of cucumber
+    # use at_exit to call @complexity.generate_report!
 
     @complexity = PageComplexity::Flow.new do |config|
       config.name = "Example flow"
