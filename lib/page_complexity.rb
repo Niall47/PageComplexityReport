@@ -31,6 +31,7 @@ module PageComplexity
         @ignore_headers = false
         @ignore_duplicate_pages = true
         @selector = '#content'
+        @filter = "^a-zA-Z0-9_.,!?\"'() \n-"
       end
     end
 
@@ -41,11 +42,11 @@ module PageComplexity
                page.text
              end
       LOG.warn "Found no text on #{page.current_url}" if text.empty?
-      text.delete("^a-zA-Z0-9_.,!?\"'() \n-")
+      text.delete(@config.filter)
     end
 
     def add_page(page)
-      raise "Page must be a capybara page" unless page.is_a?(Capybara::Session)
+      raise "Page must be a capybara page not a #{page.class}" unless page.is_a?(Capybara::Session)
 
       if pages.keys.include?(page.current_url) && @config.ignore_duplicate_pages
         LOG.info "Ignoring duplicate page #{page.current_url}"
@@ -119,28 +120,3 @@ module PageComplexity
     analysis
   end
 end
-
-
-# TODO
-# Think of a cool name for the gem - FlowVisor FlowAnalytics
-# Make sure the number output are correct and not being skewed by the html
-# Spec tests
-# EN & CY support
-# optionally strip the header and footer out of the page - Done
-# remove any wierd characters that are messing up the result
-# take an arg for the output file location - Done
-# update the template to colour code good and bad results
-# Add an estimated journey time - In progress
-# TODO add_pages just take an array and loop through it
-
-
-# Mentortainment
-# Or just an after hook
-# PageComplexity::Flow.new(name: 'Identity-UI') in the env.rb
-# store as a hash so we can overwrite repeating pages
-# at_exit do generate report
-#TODO I don't think this will work, won't the instance be overwritten each scenario?
-
-# convert scores into meaningful stats
-# Latex, research me
-# Mixin to add to some of the silly methods
