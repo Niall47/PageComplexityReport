@@ -5,14 +5,14 @@ end
 Given(/^a user navigates through (.*)$/) do |url|
 
   # SETUP COMPLEXITY REPORT
-  PageComplexity.flow = PageComplexity::Flow.new do |config|
+  new_flow = PageComplexity::Flow.new do |config|
     config.ignore_duplicate_pages = true
     config.ignore_headers = false
     config.name = "Step_walker_demo"
     config.output_directory = "reports"
     config.selector = "#content"
   end
-
+  PageComplexity.flow = new_flow
 
   visit 'http://www.gov.uk'
   while page.current_url != url

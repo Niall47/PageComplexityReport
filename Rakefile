@@ -13,7 +13,7 @@ task default: %i[spec rubocop]
 
 task :build do
   sh "gem build page_complexity.gemspec"
-  sh "gem install page_complexity-0.1.1.gem"
+  sh "gem install page_complexity-0.0.1.gem"
 end
 
 task :run do

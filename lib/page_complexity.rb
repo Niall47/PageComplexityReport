@@ -3,7 +3,6 @@
 require_relative "page_complexity/version"
 require "textstat"
 require "erb"
-require "ruby-latex"
 
 # TODO spec tests
 # TODO update TextStat gem with EN-GB and CY-GB dictionaries
@@ -14,7 +13,14 @@ require "ruby-latex"
 # Parse the url to remove the query string when comparing for duplicate pages?
 # TODO if the module owned the variable it wont get cleaned up, acts as singleton
 module PageComplexity
+  AVERAGE_WORDS_PER_MINUTE = 200
+
   class Error < StandardError; end
+
+  def configure
+    self.config ||= Configuration.new
+    yield(config)
+  end
 
   def self.flow
     @flow
@@ -24,9 +30,42 @@ module PageComplexity
     @flow = flow
   end
 
-  def configure
-    self.config ||= Configuration.new
-    yield(config)
+  def self.time_to_read(text)
+    minutes = (TextStat.lexicon_count(text).to_f / AVERAGE_WORDS_PER_MINUTE)
+    LOG.info "Time to read is #{minutes.round(0)} minutes"
+    minutes.round(0).to_s
+  end
+
+  def self.analyze(text:)
+    analysis = {}
+    if text.empty?
+      analysis[:error] = 'No text found'
+    else
+      # TODO do we care about many of these?
+      analysis[:time_to_read] = time_to_read(text)
+      analysis[:char_count] = TextStat.char_count(text)
+      analysis[:lexicon_count] = TextStat.lexicon_count(text)
+      analysis[:syllable_count] = TextStat.syllable_count(text)
+      analysis[:sentence_count] = TextStat.sentence_count(text)
+      analysis[:avg_sentence_length] = TextStat.avg_sentence_length(text)
+      analysis[:avg_syllables_per_word] = TextStat.avg_syllables_per_word(text)
+      analysis[:avg_letter_per_word] = TextStat.avg_letter_per_word(text)
+      analysis[:avg_sentence_per_word] = TextStat.avg_sentence_per_word(text)
+      analysis[:difficult_words] = TextStat.difficult_words(text)
+      analysis[:flesch_reading_ease] = TextStat.flesch_reading_ease(text)
+      analysis[:flesch_kincaid_grade] = TextStat.flesch_kincaid_grade(text)
+      analysis[:gunning_fog] = TextStat.gunning_fog(text)
+      analysis[:smog_index] = TextStat.smog_index(text)
+      analysis[:automated_readability_index] = TextStat.automated_readability_index(text)
+      analysis[:coleman_liau_index] = TextStat.coleman_liau_index(text)
+      analysis[:linsear_write_formula] = TextStat.linsear_write_formula(text)
+      analysis[:dale_chall_readability_score] = TextStat.dale_chall_readability_score(text)
+      analysis[:lix] = TextStat.lix(text)
+      analysis[:forcast] = TextStat.forcast(text)
+      analysis[:powers_sumner_kearl] = TextStat.powers_sumner_kearl(text)
+      analysis[:spache] = TextStat.spache(text)
+    end
+    analysis
   end
 
   class Flow
@@ -111,42 +150,4 @@ module PageComplexity
     end
   end
 
-  def self.time_to_read(text)
-    # TODO extract to contant
-    minutes = (TextStat.lexicon_count(text).to_f / 200)
-    LOG.info "Time to read is #{minutes.round(0)} minutes"
-    minutes.round(0).to_s
-  end
-
-  def self.analyze(text:)
-    analysis = {}
-    if text.empty?
-      analysis[:error] = 'No text found'
-    else
-      # TODO do we care about many of these?
-      analysis[:time_to_read] = time_to_read(text)
-      analysis[:char_count] = TextStat.char_count(text)
-      analysis[:lexicon_count] = TextStat.lexicon_count(text)
-      analysis[:syllable_count] = TextStat.syllable_count(text)
-      analysis[:sentence_count] = TextStat.sentence_count(text)
-      analysis[:avg_sentence_length] = TextStat.avg_sentence_length(text)
-      analysis[:avg_syllables_per_word] = TextStat.avg_syllables_per_word(text)
-      analysis[:avg_letter_per_word] = TextStat.avg_letter_per_word(text)
-      analysis[:avg_sentence_per_word] = TextStat.avg_sentence_per_word(text)
-      analysis[:difficult_words] = TextStat.difficult_words(text)
-      analysis[:flesch_reading_ease] = TextStat.flesch_reading_ease(text)
-      analysis[:flesch_kincaid_grade] = TextStat.flesch_kincaid_grade(text)
-      analysis[:gunning_fog] = TextStat.gunning_fog(text)
-      analysis[:smog_index] = TextStat.smog_index(text)
-      analysis[:automated_readability_index] = TextStat.automated_readability_index(text)
-      analysis[:coleman_liau_index] = TextStat.coleman_liau_index(text)
-      analysis[:linsear_write_formula] = TextStat.linsear_write_formula(text)
-      analysis[:dale_chall_readability_score] = TextStat.dale_chall_readability_score(text)
-      analysis[:lix] = TextStat.lix(text)
-      analysis[:forcast] = TextStat.forcast(text)
-      analysis[:powers_sumner_kearl] = TextStat.powers_sumner_kearl(text)
-      analysis[:spache] = TextStat.spache(text)
-    end
-    analysis
-  end
 end

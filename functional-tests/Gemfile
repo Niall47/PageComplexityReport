@@ -9,7 +9,7 @@ source 'https://nexus.tooling.dvla.gov.uk/repository/gem-private' do
 end
 
 # Public gems from RubyGems:
-gem 'page_complexity', '~> 0.1.1'
+gem 'page_complexity', '~> 0.0.1'
 gem 'axe-core-cucumber', '~> 4.4'
 gem 'bundler-audit', '~> 0.9'
 gem 'chutney', '~> 3.3'
