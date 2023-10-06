@@ -5,19 +5,19 @@ end
 Given(/^a user navigates through (.*)$/) do |url|
 
   # SETUP COMPLEXITY REPORT
-  @complexity = PageComplexity::Flow.new do |config|
+  PageComplexity.flow = PageComplexity::Flow.new do |config|
     config.ignore_duplicate_pages = true
     config.ignore_headers = false
     config.name = "Step_walker_demo"
     config.output_directory = "reports"
-    config.selector = '#content'
+    config.selector = "#content"
   end
 
 
   visit 'http://www.gov.uk'
   while page.current_url != url
     # ADD PAGE TO COMPLEXITY REPORT
-    @complexity.add_page(page)
+    PageComplexity.flow.add_page(page)
     current_url = URI.parse(page.current_url).host
     case current_url
     when 'www.gov.uk'
@@ -37,6 +37,6 @@ Given(/^a user navigates through (.*)$/) do |url|
     end
   end
   # GENERATE PAGE COMPLEXITY REPORT
-  @complexity.add_page(page)
-  @complexity.generate_report!
+  PageComplexity.flow.add_page(page)
+  PageComplexity.flow.generate_report!
 end

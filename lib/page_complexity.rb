@@ -9,10 +9,20 @@ require "ruby-latex"
 # TODO update TextStat gem with EN-GB and CY-GB dictionaries
 # TODO method comments
 # TODO drone setup
-# TODO Clean up and colour code the output html
-
+# TODO Clean up and colour code the output html, display time to read on the top bar
+# TODO do we want to get screenshots? no
+# Parse the url to remove the query string when comparing for duplicate pages?
+# TODO if the module owned the variable it wont get cleaned up, acts as singleton
 module PageComplexity
   class Error < StandardError; end
+
+  def self.flow
+    @flow
+  end
+
+  def self.flow=(flow)
+    @flow = flow
+  end
 
   def configure
     self.config ||= Configuration.new
@@ -30,7 +40,7 @@ module PageComplexity
 
     class Configuration
       attr_accessor :name, :output_directory, :ignore_headers, :ignore_duplicate_pages, :selector
-
+      #TODO check output directory is respected
       def initialize
         @name = 'Unnamed Flow'
         @output_directory = '/'
@@ -41,13 +51,16 @@ module PageComplexity
       end
     end
 
-    def get_text(page)
+    def page_text(page)
       text = if @config.ignore_headers
                find_all(@config.selector).map(&:text).join(' ')
              else
                page.text
              end
-      LOG.warn "Found no text on #{page.current_url}" if text.empty?
+      if text.empty?
+        LOG.warn "Found no text on #{page.current_url}"
+        LOG.debug "Config: #{@config.inspect}"
+      end
       text.delete(@config.filter)
     end
 
@@ -58,7 +71,7 @@ module PageComplexity
         LOG.info "Ignoring duplicate page #{page.current_url}"
       else
         LOG.info "Adding page #{page.current_url}"
-        text = get_text(page)
+        text = page_text(page)
         analysis = text.empty? ? { error: 'No text found' } : PageComplexity.analyze(text: text)
         new_page = Page.new(analysis: analysis, text: text, url: page.current_url)
         @pages[page.current_url] = new_page
@@ -67,9 +80,10 @@ module PageComplexity
 
     def add_pages(pages)
       raise "Expected an array of pages" unless (pages.is_a? Array) && (pages.all? { |page| page.is_a?(Capybara::Session) })
+
       # TODO do we need to dup or freeze them first?
 
-      pages.each { | page | add_page(page) }
+      pages.each { |page| add_page(page) }
     end
 
     def generate_report!
@@ -98,10 +112,12 @@ module PageComplexity
   end
 
   def self.time_to_read(text)
+    # TODO extract to contant
     minutes = (TextStat.lexicon_count(text).to_f / 200)
     LOG.info "Time to read is #{minutes.round(0)} minutes"
     minutes.round(0).to_s
   end
+
   def self.analyze(text:)
     analysis = {}
     if text.empty?
