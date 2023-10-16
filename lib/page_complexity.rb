@@ -14,6 +14,8 @@ require "erb"
 # TODO if the module owned the variable it wont get cleaned up, acts as singleton
 module PageComplexity
   AVERAGE_WORDS_PER_MINUTE = 200
+  DEFAULT_SELECTOR = '#content'
+  REGEX_FILTER = "^a-zA-Z0-9_.,!?\"'() \n-"
 
   class Error < StandardError; end
 
@@ -78,15 +80,16 @@ module PageComplexity
     end
 
     class Configuration
-      attr_accessor :name, :output_directory, :ignore_headers, :ignore_duplicate_pages, :selector
+      attr_accessor :name, :output_directory, :ignore_headers, :ignore_duplicate_pages, :selector, :filter, :words_per_minute
       #TODO check output directory is respected
       def initialize
+        @filter = REGEX_FILTER
+        @ignore_duplicate_pages = true
+        @ignore_headers = false
         @name = 'Unnamed Flow'
         @output_directory = '/'
-        @ignore_headers = false
-        @ignore_duplicate_pages = true
-        @selector = '#content'
-        @filter = "^a-zA-Z0-9_.,!?\"'() \n-"
+        @selector = DEFAULT_SELECTOR
+        @words_per_minute = AVERAGE_WORDS_PER_MINUTE
       end
     end
 

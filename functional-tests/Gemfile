@@ -2,8 +2,8 @@ source 'https://rubygems.org'
 
 # DVLA-specific gems from Nexus:
 source 'https://nexus.tooling.dvla.gov.uk/repository/gem-private' do
-  gem 'dvla-browser-drivers', '~> 0.0.4'
-  gem 'dvla-herodotus', '~> 0.4'
+  gem 'dvla-browser-drivers', '1.1.0'
+  gem 'dvla-herodotus', '~> 1.1.0'
   gem 'dvla-lint', '~> 1.6'
   gem 'dvla-testware', '~> 1.6'
 end
