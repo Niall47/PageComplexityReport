@@ -1,6 +1,6 @@
 GIT
-  remote: https://github.com/niall47/textstat.git
-  revision: a0c7a97498392aa6be12058d0f36b106c16e778c
+  remote: https://github.com/niall47/textstat
+  revision: 40ce3856418509eb97346ba297ce1cf7f3e3fbf1
   branch: master
   specs:
     textstat (0.1.9)
@@ -11,7 +11,7 @@ PATH
   specs:
     page_complexity (0.0.1)
       ruby-latex (~> 0.1)
-      textstat (= 0.1.9)
+      textstat
 
 GEM
   remote: https://rubygems.org/
@@ -42,7 +42,7 @@ GEM
     matrix (0.4.2)
     method_source (1.0.0)
     mini_mime (1.1.5)
-    nokogiri (1.15.4-x86_64-linux)
+    nokogiri (1.15.4-arm64-darwin)
       racc (~> 1.4)
     parallel (1.23.0)
     parser (3.2.2.4)
@@ -115,7 +115,7 @@ GEM
       nokogiri (~> 1.8)
 
 PLATFORMS
-  x86_64-linux
+  arm64-darwin-22
 
 DEPENDENCIES
   capybara (~> 3.39)
@@ -128,7 +128,7 @@ DEPENDENCIES
   rubocop (~> 1.21)
   ruby-latex (~> 0.1)
   selenium-webdriver (~> 4.12)
-  textstat!
+  textstat (= 0.1.9)!
 
 BUNDLED WITH
-   2.4.13
+   2.4.15

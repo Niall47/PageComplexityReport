@@ -3,12 +3,12 @@ source 'https://rubygems.org'
 # DVLA-specific gems from Nexus:
 source 'https://nexus.tooling.dvla.gov.uk/repository/gem-private' do
   gem 'dvla-browser-drivers', '1.1.0'
-  gem 'dvla-herodotus', '~> 1.1.0'
-  gem 'dvla-lint', '~> 1.6'
-  gem 'dvla-testware', '~> 1.6'
 end
 
 # Public gems from RubyGems:
+gem 'textstat', '0.1.9', github: 'niall47/textstat', branch: 'master'
+
+gem 'dvla-herodotus', '~> 1.0.0'
 gem 'page_complexity', '~> 0.0.1'
 gem 'axe-core-cucumber', '~> 4.4'
 gem 'bundler-audit', '~> 0.9'
@@ -28,3 +28,4 @@ gem 'simple_symbolize', '~> 2.0'
 gem 'webdrivers', '~> 5.1', require: false
 
 gem "uri", "~> 0.12.2"
+

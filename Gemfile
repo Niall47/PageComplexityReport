@@ -5,7 +5,7 @@ source "https://rubygems.org"
 # Specify your gem's dependencies in page_complexity.gemspec
 gemspec
 
-gem 'textstat', github: 'niall47/textstat', branch: 'master'
+gem 'textstat', '0.1.9', git: 'https://github.com/niall47/textstat', branch: 'master'
 
 gem "rake", "~> 13.0"
 
@@ -25,3 +25,5 @@ gem "rspec-expectations", "~> 3.12"
 gem "ruby-latex", "~> 0.1"
 
 gem "selenium-webdriver", "~> 4.12"
+
+gemspec

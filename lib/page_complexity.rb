@@ -53,7 +53,7 @@ module PageComplexity
       analysis[:avg_syllables_per_word] = TextStat.avg_syllables_per_word(text)
       analysis[:avg_letter_per_word] = TextStat.avg_letter_per_word(text)
       analysis[:avg_sentence_per_word] = TextStat.avg_sentence_per_word(text)
-      analysis[:difficult_words] = TextStat.difficult_words(text)
+      analysis[:difficult_words] = TextStat.difficult_words(text).join(' ')
       analysis[:flesch_reading_ease] = TextStat.flesch_reading_ease(text)
       analysis[:flesch_kincaid_grade] = TextStat.flesch_kincaid_grade(text)
       analysis[:gunning_fog] = TextStat.gunning_fog(text)
@@ -103,7 +103,7 @@ module PageComplexity
         LOG.warn "Found no text on #{page.current_url}"
         LOG.debug "Config: #{@config.inspect}"
       end
-      text.delete(@config.filter)
+      text.delete(@config.filter).gsub("\n", ' ')
     end
 
     def add_page(page)
