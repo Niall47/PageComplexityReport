@@ -5,6 +5,8 @@ source "https://rubygems.org"
 # Specify your gem's dependencies in page_complexity.gemspec
 gemspec
 
+gem 'textstat', github: 'niall47/textstat', branch: 'master'
+
 gem "rake", "~> 13.0"
 
 gem "rspec", "~> 3.0"
