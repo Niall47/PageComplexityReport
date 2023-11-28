@@ -27,3 +27,5 @@ gem "ruby-latex", "~> 0.1"
 gem "selenium-webdriver", "~> 4.12"
 
 gemspec
+
+gem "yard", "~> 0.9.34"

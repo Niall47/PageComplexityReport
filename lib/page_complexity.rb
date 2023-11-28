@@ -17,27 +17,47 @@ module PageComplexity
   DEFAULT_SELECTOR = '#content'
   REGEX_FILTER = "^a-zA-Z0-9_.,!?\"'() \n-"
 
+  # Custom error class for PageComplexity module
   class Error < StandardError; end
 
+  # Yields the configuration for PageComplexity
+  #
+  # @yieldparam config [Configuration] the configuration object
   def configure
     self.config ||= Configuration.new
     yield(config)
   end
 
+  # @return [Flow] the flow instance
   def self.flow
     @flow
   end
 
+  # @param flow [Flow] the flow instance to set
   def self.flow=(flow)
     @flow = flow
   end
 
+  # Calculates time to read based on average words per minute
+  #
+  # @param text [String] the input text
+  # @return [String] the formatted time to read
   def self.time_to_read(text)
-    minutes = (TextStat.lexicon_count(text).to_f / AVERAGE_WORDS_PER_MINUTE)
-    LOG.info "Time to read is #{minutes.round(0)} minutes"
-    minutes.round(0).to_s
+    words = TextStat.lexicon_count(text)
+    minutes = (words.to_f / AVERAGE_WORDS_PER_MINUTE)
+    total_seconds = minutes * 60
+    minutes_part = total_seconds.to_i / 60
+    seconds_part = total_seconds.to_i % 60
+    time_string = "#{minutes_part} minutes and #{seconds_part} seconds"
+    LOG.info "Time to read is #{time_string}"
+    time_string
   end
 
+
+  # Analyzes text for various readability metrics using TextStat gem
+  #
+  # @param text [String] the input text
+  # @return [Hash] the analysis results
   def self.analyze(text:)
     analysis = {}
     if text.empty?
@@ -70,18 +90,44 @@ module PageComplexity
     analysis
   end
 
+  # Manages multiple pages for analysis
   class Flow
-    attr_reader :pages, :name
+    # @return [Hash] the pages and their information
+    attr_reader :pages
 
+    # Initializes the Flow with optional configuration block
+    #
+    # @yieldparam config [Configuration] the configuration object
     def initialize(&block)
       @config = Configuration.new
       block.call(@config) if block_given?
       @pages = {}
     end
 
+    # Configuration settings for Flow
     class Configuration
-      attr_accessor :name, :output_directory, :ignore_headers, :ignore_duplicate_pages, :selector, :filter, :words_per_minute
-      #TODO check output directory is respected
+      # @return [String] the name of the configuration
+      attr_accessor :name
+
+      # @return [String] the output directory path
+      attr_accessor :output_directory
+
+      # @return [Boolean] whether to ignore headers during text extraction
+      attr_accessor :ignore_headers
+
+      # @return [Boolean] whether to ignore duplicate pages
+      attr_accessor :ignore_duplicate_pages
+
+      # @return [String] the CSS selector for content
+      attr_accessor :selector
+
+      # @return [String] the regex filter for text
+      attr_accessor :filter
+
+      # @return [Integer] the average words per minute for time-to-read calculation
+      attr_accessor :words_per_minute
+
+      # TODO: Check if the output directory is respected
       def initialize
         @filter = REGEX_FILTER
         @ignore_duplicate_pages = true
@@ -93,6 +139,10 @@ module PageComplexity
       end
     end
 
+    # Retrieves text from a page based on configuration
+    #
+    # @param page [Capybara::Session] the Capybara page
+    # @return [String] the extracted text
     def page_text(page)
       text = if @config.ignore_headers
                find_all(@config.selector).map(&:text).join(' ')
@@ -106,6 +156,9 @@ module PageComplexity
       text.delete(@config.filter).gsub("\n", ' ')
     end
 
+    # Adds a page to the flow
+    #
+    # @param page [Capybara::Session] the Capybara page to add
     def add_page(page)
       raise "Page must be a capybara page not a #{page.class}" unless page.is_a?(Capybara::Session)
 
@@ -120,6 +173,9 @@ module PageComplexity
       end
     end
 
+    # Adds an array of pages to the flow
+    #
+    # @param pages [Array<Capybara::Session>] the array of Capybara pages to add
     def add_pages(pages)
       raise "Expected an array of pages" unless (pages.is_a? Array) && (pages.all? { |page| page.is_a?(Capybara::Session) })
 
@@ -127,6 +183,7 @@ module PageComplexity
 
       pages.each { |page| add_page(page) }
     end
+
 
     def generate_report!
       _analysis_metrics = @pages.first.last.analysis.keys
