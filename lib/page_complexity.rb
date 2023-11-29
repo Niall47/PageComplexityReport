@@ -12,6 +12,7 @@ require "erb"
 # TODO do we want to get screenshots? no
 # Parse the url to remove the query string when comparing for duplicate pages?
 # TODO if the module owned the variable it wont get cleaned up, acts as singleton
+
 module PageComplexity
   AVERAGE_WORDS_PER_MINUTE = 200
   DEFAULT_SELECTOR = '#content'
@@ -93,7 +94,7 @@ module PageComplexity
   # Manages multiple pages for analysis
   class Flow
     # @return [Hash] the pages and their information
-    attr_reader :pages
+    attr_reader :pages, :config
 
     # Initializes the Flow with optional configuration block
     #

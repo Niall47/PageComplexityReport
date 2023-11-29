@@ -113,9 +113,10 @@ GEM
     websocket (1.2.10)
     xpath (3.2.0)
       nokogiri (~> 1.8)
+    yard (0.9.34)
 
 PLATFORMS
-  arm64-darwin-22
+    ruby
 
 DEPENDENCIES
   capybara (~> 3.39)
@@ -129,6 +130,7 @@ DEPENDENCIES
   ruby-latex (~> 0.1)
   selenium-webdriver (~> 4.12)
   textstat (= 0.1.9)!
+  yard (~> 0.9.34)
 
 BUNDLED WITH
    2.4.15
