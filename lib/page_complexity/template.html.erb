@@ -62,7 +62,7 @@
 <% @pages.each_with_index do |page, index| %>
   <button class="collapsible top-level-collapsible" onclick="toggleCollapse('content<%= index %>')"><%= page.last.url %></button>
   <div class="content" id="content<%= index %>">
-    <h2>URL: <%= page.last.url %></h2>
+    <h2>Time to read:  <%= page.last.analysis[:time_to_read] %></h2>
     <button class="collapsible nested-collapsible" onclick="toggleCollapse('text<%= index %>')">Page Text</button>
     <div class="content" id="text<%= index %>">
       <pre><%= page.last.text %></pre>
